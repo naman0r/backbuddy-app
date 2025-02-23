@@ -1,45 +1,70 @@
+// pages/SignInPage.jsx
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // adjust the path if needed
 
 const SignInPage = ({ navigation }) => {
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-  
-    const handleSignIn = () => {
-      // Pass the username to the HomePage
-      navigation.replace("Home", { userName }); // `replace` removes the SignInPage from the stack
-    };
-    
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={userName}
-          onChangeText={setUserName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        <Button title="Sign In" onPress={handleSignIn} />
-      </View>
-    );
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // User is signed in
+        const user = userCredential.user;
+        // Navigate to Home and pass the user's email as the username
+        navigation.replace("Home", { username: user.email });
+      })
+      .catch((error) => {
+        // Handle errors here
+        Alert.alert("Sign In Error", error.message);
+      });
   };
 
-  export default SignInPage;
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign In</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <Button title="Sign In" onPress={handleSignIn} />
+    </View>
+  );
+};
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-  });
+export default SignInPage;
 
-  
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff"
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  input: {
+    width: "80%",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+  }
+});
