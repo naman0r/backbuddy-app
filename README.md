@@ -1,5 +1,8 @@
 # readme for Forge Team Sadeel Spring 2025 app
 
+npx expo start 
+
+
 # Action steps and timeline:
 
 - work on footer and make it just like the figma mockup

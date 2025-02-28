@@ -1,57 +1,85 @@
-import { Text, View, StyleSheet, ImageBackground, Button } from "react-native";
-import React, { Component } from "react";
-import BottomNavBg from "../assets/topnav-bg.png";
-import HomeIcon from "../assets/homeIcon.svg";
-import ProfileIcon from "../assets/profileIcon.svg";
-import { useNavigation } from "@react-navigation/native"; // Import navigation hook
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const BottomNav = (props) => {
-  const navigation = useNavigation(); // Get navigation object
+const BottomNav = () => {
+  const navigation = useNavigation();
 
   return (
-    <ImageBackground
-      source={BottomNavBg}
-      resizeMode="cover"
-      style={styles.imageBackground}
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.text}>this is the footer.</Text>
-        <Button
-          title="Home"
-          onPress={() => navigation.navigate("Home")} // Now `navigation` is accessible
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate("Home")}
+      >
+        <MaterialCommunityIcons name="home-outline" size={28} color="black" />
+        <Text style={styles.navText}>Home</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate("Goals")}
+      >
+        <MaterialCommunityIcons name="target" size={28} color="black" />
+        <Text style={styles.navText}>Goals</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate("Connect")}
+      >
+        <MaterialCommunityIcons
+          name="bluetooth-connect"
+          size={28}
+          color="black"
         />
-        <Button
-          title="Profile"
-          onPress={() => navigation.navigate("Profile")} // Now `navigation` is accessible
+        <Text style={styles.navText}>Connect</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate("Profile")}
+      >
+        <MaterialCommunityIcons
+          name="account-outline"
+          size={28}
+          color="black"
         />
-      </View>
-    </ImageBackground>
+        <Text style={styles.navText}>Profile</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navItem}
+        onPress={() => navigation.navigate("Settings")}
+      >
+        <MaterialCommunityIcons
+          name="dots-horizontal"
+          size={28}
+          color="black"
+        />
+        <Text style={styles.navText}>Settings</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
-export default BottomNav;
-
 const styles = StyleSheet.create({
-  imageBackground: {
-    width: "100%",
-    height: 80, // Adjusted for a reasonable height
-    justifyContent: "center",
-    alignItems: "center",
-    position: "fixed",
-  },
-  overlay: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(19, 74, 202, 0.26)", // Optional dark overlay
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
     flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#e6863b", // Orange background
+    paddingVertical: 15,
+    paddingHorizontal: 15,
   },
-  text: {
-    paddingTop: 0,
-    fontSize: 20,
+  navItem: {
+    alignItems: "center",
+  },
+  navText: {
+    fontSize: 12,
     fontWeight: "bold",
     color: "black",
-    textAlign: "center",
   },
 });
+
+export default BottomNav;

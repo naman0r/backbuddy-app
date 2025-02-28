@@ -9,6 +9,9 @@ import { auth } from "../firebase"; // adjust path if needed
 import SignInPage from "../pages/SignInPage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
+import Goals from "../pages/Goals.jsx";
+import Connect from "../pages/Connect.jsx";
+import Settings from "../pages/Settings.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +42,9 @@ const AppNavigator = () => {
           <>
             <Stack.Screen name="Home" component={HomePage} />
             <Stack.Screen name="Profile" component={ProfilePage} />
+            <Stack.Screen name="Goals" component={Goals} />
+            <Stack.Screen name="Connect" component={Connect} />
+            <Stack.Screen name="Settings" component={Settings} />
           </>
         ) : (
           <Stack.Screen name="SignIn" component={SignInPage} />
