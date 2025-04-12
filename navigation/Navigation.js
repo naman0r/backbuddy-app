@@ -1,12 +1,14 @@
 // Navigation.js
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase"; // adjust path if needed
+
+// Import Auth context
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
 import SignInPage from "../pages/SignInPage";
+import SignUpPage from "../pages/SignUpPage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import Goals from "../pages/Goals.jsx";
@@ -15,22 +17,15 @@ import Settings from "../pages/Settings.jsx";
 
 const Stack = createNativeStackNavigator();
 
-const AppNavigator = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return unsubscribe; // clean up on unmount
-  }, []);
+// Define the navigation logic component
+const AppNavigationLogic = () => {
+  const { currentUser, loading } = useAuth(); // Get user and loading state from context
 
   if (loading) {
+    // Show loading indicator while checking auth state
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="#0057e7" />
       </View>
     );
   }
@@ -38,7 +33,8 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
+        {currentUser ? (
+          // User is signed in: Show main app stack
           <>
             <Stack.Screen name="Home" component={HomePage} />
             <Stack.Screen name="Profile" component={ProfilePage} />
@@ -47,10 +43,23 @@ const AppNavigator = () => {
             <Stack.Screen name="Settings" component={Settings} />
           </>
         ) : (
-          <Stack.Screen name="SignIn" component={SignInPage} />
+          // No user signed in: Show auth stack
+          <>
+            <Stack.Screen name="SignIn" component={SignInPage} />
+            <Stack.Screen name="SignUp" component={SignUpPage} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
+  );
+};
+
+// Main App Navigator component wraps logic with the provider
+const AppNavigator = () => {
+  return (
+    <AuthProvider>
+      <AppNavigationLogic />
+    </AuthProvider>
   );
 };
 

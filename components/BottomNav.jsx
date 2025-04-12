@@ -1,64 +1,63 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const BottomNav = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const navItems = [
+    { name: "Home", icon: "home-outline", iconFocused: "home" },
+    { name: "Goals", icon: "target", iconFocused: "target" },
+    {
+      name: "Connect",
+      icon: "bluetooth-connect",
+      iconFocused: "bluetooth-connect",
+    },
+    { name: "Profile", icon: "account-outline", iconFocused: "account" },
+    {
+      name: "Settings",
+      icon: "dots-horizontal",
+      iconFocused: "dots-horizontal",
+    },
+  ];
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <MaterialCommunityIcons name="home-outline" size={28} color="black" />
-        <Text style={styles.navText}>Home</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate("Goals")}
-      >
-        <MaterialCommunityIcons name="target" size={28} color="black" />
-        <Text style={styles.navText}>Goals</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate("Connect")}
-      >
-        <MaterialCommunityIcons
-          name="bluetooth-connect"
-          size={28}
-          color="black"
-        />
-        <Text style={styles.navText}>Connect</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <MaterialCommunityIcons
-          name="account-outline"
-          size={28}
-          color="black"
-        />
-        <Text style={styles.navText}>Profile</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate("Settings")}
-      >
-        <MaterialCommunityIcons
-          name="dots-horizontal"
-          size={28}
-          color="black"
-        />
-        <Text style={styles.navText}>Settings</Text>
-      </TouchableOpacity>
+      {navItems.map((item) => {
+        const isActive = route.name === item.name;
+        return (
+          <TouchableOpacity
+            key={item.name}
+            style={styles.navItem}
+            onPress={() => navigation.navigate(item.name)}
+            activeOpacity={0.7}
+          >
+            <MaterialCommunityIcons
+              name={isActive ? item.iconFocused : item.icon}
+              size={isActive ? 28 : 26}
+              color={
+                isActive ? styles.activeColor.color : styles.inactiveColor.color
+              }
+            />
+            <Text
+              style={[
+                styles.navText,
+                isActive ? styles.activeColor : styles.inactiveColor,
+              ]}
+            >
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -68,17 +67,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "#e6863b", // Orange background
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+    backgroundColor: "#ffffff",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "#d3d3d3",
+    paddingBottom: Platform.OS === "ios" ? 20 : 10,
+    paddingTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 3,
   },
   navItem: {
     alignItems: "center",
+    flex: 1,
   },
   navText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "black",
+    fontSize: 11,
+    marginTop: 2,
+  },
+  activeColor: {
+    color: "#0057e7",
+    fontWeight: "600",
+  },
+  inactiveColor: {
+    color: "#6c757d",
+    fontWeight: "400",
   },
 });
 
